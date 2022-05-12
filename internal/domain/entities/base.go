@@ -12,12 +12,10 @@ type Base struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
-func (b *Base) GenerateID() {
+func (b *Base) SetDefaultValues() {
 	b.UUID = uuid.New().String()
-}
-
-func (b *Base) SetCreatedAt() {
 	b.CreatedAt = time.Now()
+	b.UpdatedAt = time.Now()
 }
 
 func (b *Base) SetUpdatedAt() {

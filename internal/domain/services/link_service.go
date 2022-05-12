@@ -4,7 +4,6 @@ import (
 	"context"
 	"mercurio-web-crawler/internal/domain/contract"
 	"mercurio-web-crawler/internal/domain/entities"
-	"time"
 )
 
 type LinkService struct {
@@ -24,11 +23,11 @@ func (s *LinkService) FindAvailableToVisits(context context.Context) (links []en
 	return s.repo.FindAvailableToVisits(context)
 }
 func (s *LinkService) Update(context context.Context, link entities.Link) (err error) {
-	_, err = s.repo.GetByUUID(context, link.Base.UUID)
+	_, err = s.repo.GetByUUID(context, link.UUID)
 	if err != nil {
 		return err
 	}
 
-	link.UpdatedAt = time.Now()
+	link.SetUpdatedAt()
 	return s.repo.Update(context, link)
 }

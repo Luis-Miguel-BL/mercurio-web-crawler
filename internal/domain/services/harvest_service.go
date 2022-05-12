@@ -17,5 +17,6 @@ func NewHarvestService(repo contract.HarvestRepository) *HarvestService {
 }
 
 func (s *HarvestService) Create(context context.Context, harvest entities.Harvest) (err error) {
+	harvest.SetDefaultValues()
 	return s.repo.Create(context, harvest)
 }

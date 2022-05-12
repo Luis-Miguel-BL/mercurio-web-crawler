@@ -5,15 +5,15 @@ import (
 	"mercurio-web-crawler/internal/domain/entities"
 )
 
-type HarvestRepository struct {
+type HarvestMemoryRepository struct {
 	Harvests []entities.Harvest
 }
 
-func NewHarvestMemoryRepository() *HarvestRepository {
-	return &HarvestRepository{Harvests: []entities.Harvest{}}
+func NewHarvestMemoryRepository() *HarvestMemoryRepository {
+	return &HarvestMemoryRepository{Harvests: []entities.Harvest{}}
 }
 
-func (repo *HarvestRepository) Create(context context.Context, harvest entities.Harvest) (err error) {
+func (repo *HarvestMemoryRepository) Create(context context.Context, harvest entities.Harvest) (err error) {
 	repo.Harvests = append(repo.Harvests, harvest)
 	return nil
 }
