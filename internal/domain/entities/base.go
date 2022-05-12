@@ -7,13 +7,13 @@ import (
 )
 
 type Base struct {
-	ID        string    `json:"_id"`
+	UUID      string    `json:"uuid"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
 func (b *Base) GenerateID() {
-	b.ID = uuid.New().String()
+	b.UUID = uuid.New().String()
 }
 
 func (b *Base) SetCreatedAt() {
