@@ -45,3 +45,15 @@ func (l *Link) SetVisit(hasError bool) {
 		l.TotalErrorInVisits++
 	}
 }
+
+func (l *Link) CreateHarvest(rawData string, pageLink string, info string) Harvest {
+	harvest := Harvest{
+		LinkUUID: l.UUID,
+		RawData:  rawData,
+		PageLink: pageLink,
+		Info:     info,
+	}
+	harvest.SetDefaultValues()
+
+	return harvest
+}

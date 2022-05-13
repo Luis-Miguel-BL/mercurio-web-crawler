@@ -1,4 +1,4 @@
-package crawler
+package scraping
 
 import (
 	"context"
@@ -7,16 +7,16 @@ import (
 	"time"
 )
 
-type Crawler struct {
+type Scraping struct {
 	linkService    contract.LinkService
 	harvestService contract.HarvestService
 }
 
-func NewCrawler(linkService contract.LinkService, harvestService contract.HarvestService) *Crawler {
-	return &Crawler{linkService: linkService, harvestService: harvestService}
+func NewScraping(linkService contract.LinkService, harvestService contract.HarvestService) *Scraping {
+	return &Scraping{linkService: linkService, harvestService: harvestService}
 }
 
-func (c *Crawler) Start(context context.Context) {
+func (c *Scraping) Start(context context.Context) {
 	for {
 		linksToVisit, err := c.linkService.FindAvailableToVisits(context)
 		if err != nil {
