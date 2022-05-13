@@ -3,7 +3,7 @@ package crawler
 import (
 	"context"
 	"fmt"
-	"mercurio-web-crawler/internal/domain/contract"
+	"mercurio-web-scraping/internal/domain/contract"
 	"time"
 )
 

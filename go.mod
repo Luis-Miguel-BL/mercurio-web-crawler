@@ -1,4 +1,4 @@
-module mercurio-web-crawler
+module mercurio-web-scraping
 
 go 1.17
 

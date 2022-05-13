@@ -3,7 +3,7 @@ package repositories
 import (
 	"context"
 	"errors"
-	"mercurio-web-crawler/internal/domain/entities"
+	"mercurio-web-scraping/internal/domain/entities"
 	"time"
 )
 

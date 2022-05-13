@@ -3,11 +3,11 @@ package main
 import (
 	"context"
 	"fmt"
-	"mercurio-web-crawler/internal/config"
-	"mercurio-web-crawler/internal/domain/crawler"
-	service "mercurio-web-crawler/internal/domain/services"
-	"mercurio-web-crawler/internal/infra/mongodb"
-	"mercurio-web-crawler/internal/infra/repositories"
+	"mercurio-web-scraping/internal/config"
+	"mercurio-web-scraping/internal/domain/crawler"
+	service "mercurio-web-scraping/internal/domain/services"
+	"mercurio-web-scraping/internal/infra/mongodb"
+	"mercurio-web-scraping/internal/infra/repositories"
 )
 
 func main() {

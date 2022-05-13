@@ -2,7 +2,7 @@ package repositories
 
 import (
 	"context"
-	"mercurio-web-crawler/internal/domain/entities"
+	"mercurio-web-scraping/internal/domain/entities"
 
 	"go.mongodb.org/mongo-driver/mongo"
 )

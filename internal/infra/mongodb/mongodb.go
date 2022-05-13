@@ -3,7 +3,7 @@ package mongodb
 import (
 	"context"
 	"log"
-	"mercurio-web-crawler/internal/config"
+	"mercurio-web-scraping/internal/config"
 	"time"
 
 	"go.mongodb.org/mongo-driver/mongo"

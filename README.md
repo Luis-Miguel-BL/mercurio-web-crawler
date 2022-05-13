@@ -1,2 +1,2 @@
-# mercurio-web-crawler
-Primeiro web crawler em Golang 
+# mercurio-web-scraping
+Primeiro web scraping em Golang 

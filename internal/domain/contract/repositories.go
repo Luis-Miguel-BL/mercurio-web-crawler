@@ -2,7 +2,7 @@ package contract
 
 import (
 	"context"
-	"mercurio-web-crawler/internal/domain/entities"
+	"mercurio-web-scraping/internal/domain/entities"
 )
 
 type LinkRepository interface {
