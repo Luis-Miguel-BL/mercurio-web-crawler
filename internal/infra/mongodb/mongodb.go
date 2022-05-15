@@ -40,6 +40,7 @@ func (db *Database) SeedDB() error {
 		existLink := entities.Link{}
 		err := linkCollection.FindOne(context.TODO(), bson.M{"url": seedLink.Url}).Decode(&existLink)
 		if err != nil && err.Error() == "mongo: no documents in result" {
+			seedLink.SetDefaultValues()
 			linksToInsert = append(linksToInsert, seedLink)
 		}
 	}

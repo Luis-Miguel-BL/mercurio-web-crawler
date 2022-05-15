@@ -10,11 +10,11 @@ import (
 
 type Harvest struct {
 	Base
-	LinkUUID      string    `json:"link_uuid"`
-	RawData       string    `json:"raw_data"`
-	PageLink      string    `json:"page_link"`
-	Info          string    `json:"info"`
-	DisappearedAt time.Time `json:"disappeared_at"`
+	LinkUUID      string    `json:"link_uuid" bson:"link_uuid"`
+	RawData       string    `json:"raw_data" bson:"raw_data"`
+	PageLink      string    `json:"page_link" bson:"page_link"`
+	Info          string    `json:"info" bson:"info"`
+	DisappearedAt time.Time `json:"disappeared_at" bson:"disappeared_at"`
 }
 
 func (h *Harvest) Validate() error {
