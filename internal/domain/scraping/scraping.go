@@ -3,34 +3,47 @@ package scraping
 import (
 	"context"
 	"fmt"
-	"mercurio-web-scraping/internal/domain/contract"
+	"mercurio-web-scraping/internal/domain/link_handlers"
+	service "mercurio-web-scraping/internal/domain/services"
 	"time"
 )
 
 type Scraping struct {
-	linkService    contract.LinkService
-	harvestService contract.HarvestService
+	ctx      context.Context
+	svc      service.Service
+	handlers link_handlers.LinkHandlers
 }
 
-func NewScraping(linkService contract.LinkService, harvestService contract.HarvestService) *Scraping {
-	return &Scraping{linkService: linkService, harvestService: harvestService}
+func NewScraping(ctx context.Context, svc service.Service, handlers link_handlers.LinkHandlers) *Scraping {
+	return &Scraping{ctx: ctx, svc: svc, handlers: handlers}
 }
 
-func (c *Scraping) Start(context context.Context) {
+func (s *Scraping) Start(ctx context.Context) {
+	fmt.Println("Starting Scraping...")
+scrapingLoop:
 	for {
-		linksToVisit, err := c.linkService.FindAvailableToVisits(context)
-		if err != nil {
-			panic("cannot be find available links to visit")
-		}
+		select {
+		case <-ctx.Done():
+			fmt.Println("Breaking Scraping...")
+			break scrapingLoop
+		case <-time.After(5 * time.Second):
+			linksToVisit, err := s.svc.LinkService.FindAvailableToVisits(ctx)
+			if err != nil {
+				panic("cannot be find available links to visit")
+			}
 
-		if len(linksToVisit) > 0 {
-			for _, linkToVisit := range linksToVisit {
-				fmt.Printf("\n visitou o link %+v\n ", linkToVisit)
-
+			if len(linksToVisit) > 0 {
+				for _, linkToVisit := range linksToVisit {
+					handleLink, ok := s.handlers[linkToVisit.Slug]
+					if !ok {
+						fmt.Println("link handle not found ", linkToVisit.Slug)
+						continue
+					}
+					fmt.Println("scraping link: ", linkToVisit.Slug)
+					handleLink.HandlerLink(linkToVisit)
+				}
 			}
 		}
-
-		time.Sleep(time.Second * 5)
 	}
 
 }

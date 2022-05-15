@@ -6,6 +6,7 @@ import (
 	"log"
 	"mercurio-web-scraping/internal/config"
 	"mercurio-web-scraping/internal/domain/entities"
+	"mercurio-web-scraping/internal/domain/link_handlers"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -16,6 +17,7 @@ import (
 type Database struct {
 	DB      *mongo.Database
 	context context.Context
+	config  config.Config
 }
 
 func GetConnection(ctx context.Context, config config.Config) *Database {
@@ -27,16 +29,17 @@ func GetConnection(ctx context.Context, config config.Config) *Database {
 		log.Fatalf("Error while connecting to mongo: %v\n", err)
 	}
 	fmt.Println("Connect with MongoDB")
-	return &Database{DB: client.Database(config.MongoDBName), context: ctx}
+	return &Database{DB: client.Database(config.MongoDBName), context: ctx, config: config}
 }
 
 func (db *Database) SeedDB() error {
 	fmt.Println("Seeding MongoDB...")
+
 	linkCollection := db.DB.Collection("link")
 
 	linksToInsert := []interface{}{}
 
-	for _, seedLink := range SeedLinks {
+	for _, seedLink := range link_handlers.GetSeedLinks(db.config) {
 		existLink := entities.Link{}
 		err := linkCollection.FindOne(context.TODO(), bson.M{"url": seedLink.Url}).Decode(&existLink)
 		if err != nil && err.Error() == "mongo: no documents in result" {
@@ -54,9 +57,4 @@ func (db *Database) SeedDB() error {
 
 	fmt.Println("Sown MongoDB")
 	return nil
-}
-
-var SeedLinks []entities.Link = []entities.Link{
-	{Url: "https://google.com", Slug: "teste-google", Origin: "google", Description: "teste google", TimeoutInSeconds: 5, HarvestType: entities.HarvestBuilding, Active: true},
-	{Url: "https://facebook.com", Slug: "teste-facebook", Origin: "facebook", Description: "teste facebook", TimeoutInSeconds: 5, HarvestType: entities.HarvestBuilding, Active: true},
 }
