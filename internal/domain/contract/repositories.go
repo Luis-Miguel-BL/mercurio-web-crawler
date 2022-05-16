@@ -13,4 +13,6 @@ type LinkRepository interface {
 
 type HarvestRepository interface {
 	Create(context context.Context, harvest entities.Harvest) (err error)
+	FindByPageLink(context context.Context, pageLink string) (harvest entities.Harvest, err error)
+	Update(context context.Context, harvest entities.Harvest) (err error)
 }

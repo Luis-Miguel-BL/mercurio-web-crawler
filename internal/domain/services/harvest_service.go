@@ -20,3 +20,10 @@ func (s *HarvestService) Create(context context.Context, harvest entities.Harves
 	harvest.SetDefaultValues()
 	return s.repo.Create(context, harvest)
 }
+
+func (s *HarvestService) FindByPageLink(context context.Context, pageLink string) (harvest entities.Harvest, err error) {
+	return s.repo.FindByPageLink(context, pageLink)
+}
+func (s *HarvestService) Update(context context.Context, harvest entities.Harvest) (err error) {
+	return s.repo.Update(context, harvest)
+}

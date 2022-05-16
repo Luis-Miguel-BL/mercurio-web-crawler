@@ -2,7 +2,7 @@ package scraping
 
 import (
 	"context"
-	"fmt"
+	"log"
 	"mercurio-web-scraping/internal/domain/link_handlers"
 	service "mercurio-web-scraping/internal/domain/services"
 	"time"
@@ -19,14 +19,14 @@ func NewScraping(ctx context.Context, svc service.Service, handlers link_handler
 }
 
 func (s *Scraping) Start(ctx context.Context) {
-	fmt.Println("Starting Scraping...")
+	log.Println("Starting Scraping...")
 scrapingLoop:
 	for {
 		select {
 		case <-ctx.Done():
-			fmt.Println("Breaking Scraping...")
+			log.Println("Breaking Scraping...")
 			break scrapingLoop
-		case <-time.After(5 * time.Second):
+		case <-time.After(2 * time.Second):
 			linksToVisit, err := s.svc.LinkService.FindAvailableToVisits(ctx)
 			if err != nil {
 				panic("cannot be find available links to visit")
@@ -36,10 +36,10 @@ scrapingLoop:
 				for _, linkToVisit := range linksToVisit {
 					handleLink, ok := s.handlers[linkToVisit.Slug]
 					if !ok {
-						fmt.Println("link handle not found ", linkToVisit.Slug)
+						log.Println("link handle not found ", linkToVisit.Slug)
 						continue
 					}
-					fmt.Println("scraping link: ", linkToVisit.Slug)
+					log.Println("scraping link: ", linkToVisit.Slug)
 					handleLink.HandlerLink(linkToVisit)
 				}
 			}

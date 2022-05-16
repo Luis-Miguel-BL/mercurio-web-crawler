@@ -2,7 +2,6 @@ package mongodb
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"mercurio-web-scraping/internal/config"
 	"mercurio-web-scraping/internal/domain/entities"
@@ -21,19 +20,19 @@ type Database struct {
 }
 
 func GetConnection(ctx context.Context, config config.Config) *Database {
-	fmt.Println("Connecting with MongoDB...")
+	log.Println("Connecting with MongoDB...")
 	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
 	defer cancel()
 	client, err := mongo.Connect(ctx, options.Client().ApplyURI(config.MongoURI))
 	if err != nil {
 		log.Fatalf("Error while connecting to mongo: %v\n", err)
 	}
-	fmt.Println("Connect with MongoDB")
+	log.Println("Connect with MongoDB")
 	return &Database{DB: client.Database(config.MongoDBName), context: ctx, config: config}
 }
 
 func (db *Database) SeedDB() error {
-	fmt.Println("Seeding MongoDB...")
+	log.Println("Seeding MongoDB...")
 
 	linkCollection := db.DB.Collection("link")
 
@@ -55,6 +54,6 @@ func (db *Database) SeedDB() error {
 		}
 	}
 
-	fmt.Println("Sown MongoDB")
+	log.Println("Sown MongoDB")
 	return nil
 }

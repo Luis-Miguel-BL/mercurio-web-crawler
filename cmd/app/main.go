@@ -28,7 +28,7 @@ func main() {
 
 	svc := service.GetServices(linkRepo, harvestRepo)
 
-	handlers := link_handlers.GetLinkHandlers(*svc)
+	handlers := link_handlers.GetLinkHandlers(ctx, *svc)
 	scraping := scraping.NewScraping(ctx, *svc, handlers)
 
 	var wg sync.WaitGroup
