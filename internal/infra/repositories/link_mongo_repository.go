@@ -17,7 +17,7 @@ type LinkMongoRepository struct {
 func NewLinkMongoRepository(mongo *mongo.Database) (repo *LinkMongoRepository) {
 
 	return &LinkMongoRepository{
-		db: mongo, collection: mongo.Collection("link"),
+		db: mongo, collection: mongo.Collection(entities.LinkCollectionName),
 	}
 }
 
@@ -64,7 +64,6 @@ func buildLinkToUpdate(link entities.Link) bson.M {
 			"description":           link.Description,
 			"last_visit":            link.LastVisit,
 			"timeout_in_seconds":    link.TimeoutInSeconds,
-			"harvest_type":          link.HarvestType,
 			"active":                link.Active,
 			"total_visits":          link.TotalVisits,
 			"total_error_in_visits": link.TotalErrorInVisits,

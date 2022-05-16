@@ -6,22 +6,19 @@ import (
 	"time"
 )
 
-type HarvestType string
-
-const HarvestBuilding HarvestType = "building"
+var LinkCollectionName = "link"
 
 type Link struct {
 	Base               `bson:",inline"`
-	Url                string      `json:"url" bson:"url"`
-	Slug               string      `json:"slug" bson:"slug"`
-	Origin             string      `json:"origin" bson:"origin"`
-	Description        string      `json:"description" bson:"description"`
-	LastVisit          time.Time   `json:"last_visit" bson:"last_visit"`
-	TimeoutInSeconds   int64       `json:"timeout_in_seconds" bson:"timeout_in_seconds"`
-	HarvestType        HarvestType `json:"harvest_type" bson:"harvest_type"`
-	Active             bool        `json:"active" bson:"active"`
-	TotalVisits        int64       `json:"total_visits" bson:"total_visits"`
-	TotalErrorInVisits int64       `json:"total_error_in_visits" bson:"total_error_in_visits"`
+	Url                string    `json:"url" bson:"url"`
+	Slug               string    `json:"slug" bson:"slug"`
+	Origin             string    `json:"origin" bson:"origin"`
+	Description        string    `json:"description" bson:"description"`
+	LastVisit          time.Time `json:"last_visit" bson:"last_visit"`
+	TimeoutInSeconds   int64     `json:"timeout_in_seconds" bson:"timeout_in_seconds"`
+	Active             bool      `json:"active" bson:"active"`
+	TotalVisits        int64     `json:"total_visits" bson:"total_visits"`
+	TotalErrorInVisits int64     `json:"total_error_in_visits" bson:"total_error_in_visits"`
 }
 
 func (l *Link) Validate() (err error) {
@@ -48,12 +45,13 @@ func (l *Link) SetErrorVisit() {
 	l.TotalErrorInVisits++
 }
 
-func (l *Link) CreateHarvest(rawData string, pageLink string, info string) Harvest {
+func (l *Link) CreateHarvest(rawData string, pageLink string, info string, harvestType HarvestType) Harvest {
 	harvest := Harvest{
-		LinkUUID: l.UUID,
-		RawData:  rawData,
-		PageLink: pageLink,
-		Info:     info,
+		LinkUUID:    l.UUID,
+		RawData:     rawData,
+		PageLink:    pageLink,
+		HarvestType: harvestType,
+		Info:        info,
 	}
 	harvest.SetDefaultValues()
 

@@ -13,8 +13,7 @@ type LinkMemoryRepository struct {
 
 func NewLinkMemoryRepository() (repo *LinkMemoryRepository) {
 	links := []entities.Link{
-		{Url: "https://google.com", Slug: "teste-google", Origin: "google", Description: "teste google", TimeoutInSeconds: 5, HarvestType: entities.HarvestBuilding, Active: true},
-		{Url: "https://facebook.com", Slug: "teste-facebook", Origin: "facebook", Description: "teste facebook", TimeoutInSeconds: 5, HarvestType: entities.HarvestBuilding, Active: true},
+		{Url: "https://google.com", Slug: "teste-google", Origin: "google", Description: "teste google", TimeoutInSeconds: 5, Active: true},
 	}
 
 	return &LinkMemoryRepository{

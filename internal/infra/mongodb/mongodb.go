@@ -5,7 +5,7 @@ import (
 	"log"
 	"mercurio-web-scraping/internal/config"
 	"mercurio-web-scraping/internal/domain/entities"
-	"mercurio-web-scraping/internal/domain/link_handlers"
+	"mercurio-web-scraping/internal/domain/seed"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -34,11 +34,11 @@ func GetConnection(ctx context.Context, config config.Config) *Database {
 func (db *Database) SeedDB() error {
 	log.Println("Seeding MongoDB...")
 
-	linkCollection := db.DB.Collection("link")
+	linkCollection := db.DB.Collection(entities.LinkCollectionName)
+	notificationCollection := db.DB.Collection(entities.NotificationCollectionName)
 
 	linksToInsert := []interface{}{}
-
-	for _, seedLink := range link_handlers.GetSeedLinks(db.config) {
+	for _, seedLink := range seed.GetSeedLinks(db.config) {
 		existLink := entities.Link{}
 		err := linkCollection.FindOne(context.TODO(), bson.M{"url": seedLink.Url}).Decode(&existLink)
 		if err != nil && err.Error() == "mongo: no documents in result" {
@@ -46,14 +46,30 @@ func (db *Database) SeedDB() error {
 			linksToInsert = append(linksToInsert, seedLink)
 		}
 	}
+	insertSeed(context.TODO(), linksToInsert, *linkCollection)
 
-	if len(linksToInsert) > 0 {
-		_, err := linkCollection.InsertMany(context.TODO(), linksToInsert, options.MergeInsertManyOptions())
-		if err != nil {
-			log.Fatalf("Error while seeding mongo: %v\n", err)
+	notificationsToInsert := []interface{}{}
+	for _, seedNotification := range seed.GetSeedNotifications(db.config) {
+		existNotification := entities.Notification{}
+		err := notificationCollection.FindOne(context.TODO(), bson.M{"contact": seedNotification.Contact, "channel": seedNotification.Channel, "harvest_target": seedNotification.HarvestTarget}).Decode(&existNotification)
+		if err != nil && err.Error() == "mongo: no documents in result" {
+			seedNotification.SetDefaultValues()
+			notificationsToInsert = append(notificationsToInsert, seedNotification)
 		}
 	}
+	insertSeed(context.TODO(), notificationsToInsert, *notificationCollection)
 
 	log.Println("Sown MongoDB")
+	return nil
+}
+
+func insertSeed(ctx context.Context, dataToInsert []interface{}, collection mongo.Collection) error {
+	if len(dataToInsert) > 0 {
+		_, err := collection.InsertMany(ctx, dataToInsert, options.MergeInsertManyOptions())
+		if err != nil {
+			log.Fatalf("Error while seeding mongo: %v\n", err)
+			return err
+		}
+	}
 	return nil
 }

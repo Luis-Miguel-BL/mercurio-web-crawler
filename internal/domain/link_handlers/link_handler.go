@@ -11,12 +11,6 @@ type LinkHandler interface {
 	HandlerLink(link entities.Link)
 }
 
-func GetSeedLinks(config config.Config) []entities.Link {
-	return []entities.Link{
-		{Url: config.ZapImoveisURL, Slug: config.ZapImoveisSlug, Origin: "ZapImoveis", Description: "Novas Casas ZapImoveis", TimeoutInSeconds: 60 * 60 * 24, HarvestType: entities.HarvestBuilding, Active: true},
-	}
-}
-
 type LinkSlug = string
 type LinkHandlers map[LinkSlug]LinkHandler
 

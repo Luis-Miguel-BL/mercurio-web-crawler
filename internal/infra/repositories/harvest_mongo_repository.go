@@ -14,7 +14,7 @@ type HarvestMongoRepository struct {
 }
 
 func NewHarvestMongoRepository(mongo *mongo.Database) *HarvestMongoRepository {
-	return &HarvestMongoRepository{db: mongo, collection: mongo.Collection("harvest")}
+	return &HarvestMongoRepository{db: mongo, collection: mongo.Collection(entities.HarvestCollectionName)}
 }
 
 func (repo *HarvestMongoRepository) Create(context context.Context, harvest entities.Harvest) (err error) {
@@ -35,6 +35,7 @@ func buildHarvestToUpdate(harvest entities.Harvest) bson.M {
 		"$set": bson.M{
 			"raw_data":       harvest.RawData,
 			"page_link":      harvest.PageLink,
+			"harvest_type":   harvest.HarvestType,
 			"info":           harvest.Info,
 			"disappeared_at": harvest.DisappearedAt,
 		},

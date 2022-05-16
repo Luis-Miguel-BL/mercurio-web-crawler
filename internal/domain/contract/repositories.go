@@ -16,3 +16,7 @@ type HarvestRepository interface {
 	FindByPageLink(context context.Context, pageLink string) (harvest entities.Harvest, err error)
 	Update(context context.Context, harvest entities.Harvest) (err error)
 }
+
+type NotificationRepository interface {
+	FindByTarget(context context.Context, target entities.HarvestType) (notifications []entities.Notification, err error)
+}

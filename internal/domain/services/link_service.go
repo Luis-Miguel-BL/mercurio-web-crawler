@@ -29,5 +29,9 @@ func (s *LinkService) Update(context context.Context, link entities.Link) (err e
 	}
 
 	link.SetUpdatedAt()
+	err = link.Validate()
+	if err != nil {
+		return err
+	}
 	return s.repo.Update(context, link)
 }

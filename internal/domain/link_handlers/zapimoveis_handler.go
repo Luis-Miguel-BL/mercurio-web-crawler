@@ -101,12 +101,25 @@ func (h *ZapImoveisHandler) HandlerLink(link entities.Link) {
 		}
 		resultURL := "https://www.zapimoveis.com.br" + result.Link.Href
 
+		var CountSuites int64
+		var CountBathrooms int64
+		var CountBedrooms int64
+		if len(result.Listing.Suites) > 0 {
+			CountSuites = result.Listing.Suites[0]
+		}
+		if len(result.Listing.Bathrooms) > 0 {
+			CountBathrooms = result.Listing.Bathrooms[0]
+		}
+		if len(result.Listing.Bedrooms) > 0 {
+			CountBedrooms = result.Listing.Bedrooms[0]
+		}
+
 		zapImoveisHarvestInfo := zapImoveisHarvestInfo{
 			Link:           resultURL,
 			Name:           result.Link.Name,
-			CountSuites:    result.Listing.Suites[0],
-			CountBathrooms: result.Listing.Bathrooms[0],
-			CountBedrooms:  result.Listing.Bedrooms[0],
+			CountSuites:    CountSuites,
+			CountBathrooms: CountBathrooms,
+			CountBedrooms:  CountBedrooms,
 			Pricing:        "R$ " + result.Listing.PricingInfos[0].Price,
 			Address:        buildAddress(result.Listing.OriginalAddress.ZipCode, result.Listing.OriginalAddress.City, result.Listing.OriginalAddress.Street, result.Listing.OriginalAddress.StreetNumber, result.Listing.OriginalAddress.Neighborhood, result.Listing.OriginalAddress.PoisList, result.Listing.OriginalAddress.Complement),
 			Contact:        "Telefone: " + result.Listing.AdvertiserContact.Phones[0] + " - WhatsApp: " + result.Listing.WhatsappNumber,
@@ -116,25 +129,22 @@ func (h *ZapImoveisHandler) HandlerLink(link entities.Link) {
 		harvestInfoBytes, harvestInfoErr := json.Marshal(zapImoveisHarvestInfo)
 
 		harvestExist, findHarvestErr := h.svc.HarvestService.FindByPageLink(h.ctx, resultURL)
-		if err != nil {
-			log.Printf("Error  %+v", err)
-			continue
-		}
 
-		if rawDataErr != nil || harvestInfoErr != nil || findHarvestErr != nil {
+		if rawDataErr != nil || harvestInfoErr != nil || findHarvestErr != nil && findHarvestErr.Error() != "mongo: no documents in result" {
 			log.Printf("Error  %+v %+v %+v", rawDataErr, harvestInfoErr, findHarvestErr)
 			link.SetErrorVisit()
 		}
+
 		rawData := string(rawDataBytes)
 		harvestInfo := string(harvestInfoBytes)
 		if harvestExist.UUID == "" {
-			linkHarvest := link.CreateHarvest(rawData, resultURL, harvestInfo)
+			linkHarvest := link.CreateHarvest(rawData, resultURL, harvestInfo, entities.HarvestBuilding)
 			h.svc.HarvestService.Create(h.ctx, linkHarvest)
 		} else if harvestExist.RawData != rawData {
 			harvestExist.RawData = rawData
 			harvestExist.Info = harvestInfo
 			err := h.svc.HarvestService.Update(h.ctx, harvestExist)
-			if err != nil && err.Error() != "mongo: no documents in result" {
+			if err != nil {
 				log.Printf("Error  %+v", err)
 				link.SetErrorVisit()
 			}

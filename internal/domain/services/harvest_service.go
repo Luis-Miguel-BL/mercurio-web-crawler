@@ -18,6 +18,10 @@ func NewHarvestService(repo contract.HarvestRepository) *HarvestService {
 
 func (s *HarvestService) Create(context context.Context, harvest entities.Harvest) (err error) {
 	harvest.SetDefaultValues()
+	err = harvest.Validate()
+	if err != nil {
+		return err
+	}
 	return s.repo.Create(context, harvest)
 }
 
@@ -25,5 +29,9 @@ func (s *HarvestService) FindByPageLink(context context.Context, pageLink string
 	return s.repo.FindByPageLink(context, pageLink)
 }
 func (s *HarvestService) Update(context context.Context, harvest entities.Harvest) (err error) {
+	err = harvest.Validate()
+	if err != nil {
+		return err
+	}
 	return s.repo.Update(context, harvest)
 }
