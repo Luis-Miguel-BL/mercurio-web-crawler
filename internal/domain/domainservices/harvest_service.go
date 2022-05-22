@@ -1,4 +1,4 @@
-package service
+package domainservices
 
 import (
 	"context"

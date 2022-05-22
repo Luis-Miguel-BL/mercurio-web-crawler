@@ -3,19 +3,19 @@ package scraping
 import (
 	"context"
 	"log"
+	"mercurio-web-scraping/internal/domain/domainservices"
 	"mercurio-web-scraping/internal/domain/link_handlers"
-	service "mercurio-web-scraping/internal/domain/services"
 	"time"
 )
 
 type Scraping struct {
-	ctx      context.Context
-	svc      service.Service
-	handlers link_handlers.LinkHandlers
+	ctx       context.Context
+	domainSVC domainservices.Service
+	handlers  link_handlers.LinkHandlers
 }
 
-func NewScraping(ctx context.Context, svc service.Service, handlers link_handlers.LinkHandlers) *Scraping {
-	return &Scraping{ctx: ctx, svc: svc, handlers: handlers}
+func NewScraping(ctx context.Context, domainSVC domainservices.Service, handlers link_handlers.LinkHandlers) *Scraping {
+	return &Scraping{ctx: ctx, domainSVC: domainSVC, handlers: handlers}
 }
 
 func (s *Scraping) Start(ctx context.Context) {
@@ -27,7 +27,7 @@ scrapingLoop:
 			log.Println("Breaking Scraping...")
 			break scrapingLoop
 		case <-time.After(2 * time.Second):
-			linksToVisit, err := s.svc.LinkService.FindAvailableToVisits(ctx)
+			linksToVisit, err := s.domainSVC.LinkService.FindAvailableToVisits(ctx)
 			if err != nil {
 				panic("cannot be find available links to visit")
 			}

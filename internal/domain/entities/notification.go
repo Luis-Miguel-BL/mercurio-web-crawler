@@ -1,19 +1,17 @@
 package entities
 
-import "errors"
+import (
+	"errors"
+	"mercurio-web-scraping/internal/application/notification"
+)
 
 var NotificationCollectionName = "notification"
 
-type NotificationChannel string
-
-const NotificationChannelTwitter NotificationChannel = "twitter"
-const NotificationChannelEmail NotificationChannel = "email"
-
 type Notification struct {
 	Base          `bson:",inline"`
-	Channel       NotificationChannel `json:"channel" bson:"channel"`
-	Contact       string              `json:"contact" bson:"contact"`
-	HarvestTarget HarvestType         `json:"harvest_target" bson:"harvest_target"`
+	Channel       notification.NotificationChannel `json:"channel" bson:"channel"`
+	Contact       string                           `json:"contact" bson:"contact"`
+	HarvestTarget HarvestType                      `json:"harvest_target" bson:"harvest_target"`
 }
 
 func (n *Notification) Validate() (err error) {

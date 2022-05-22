@@ -2,10 +2,11 @@ package main
 
 import (
 	"context"
+	"mercurio-web-scraping/internal/application/appservices"
 	"mercurio-web-scraping/internal/config"
+	"mercurio-web-scraping/internal/domain/domainservices"
 	"mercurio-web-scraping/internal/domain/link_handlers"
 	"mercurio-web-scraping/internal/domain/scraping"
-	service "mercurio-web-scraping/internal/domain/services"
 	"mercurio-web-scraping/internal/infra/mongodb"
 	"mercurio-web-scraping/internal/infra/repositories"
 	"os"
@@ -25,11 +26,13 @@ func main() {
 
 	linkRepo := repositories.NewLinkMongoRepository(mongodb.DB)
 	harvestRepo := repositories.NewHarvestMongoRepository(mongodb.DB)
+	notificationRepo := repositories.NewNotificationMongoRepository(mongodb.DB)
 
-	svc := service.GetServices(linkRepo, harvestRepo)
+	app_svc := appservices.GetService(config)
+	domain_svc := domainservices.GetServices(*app_svc, linkRepo, harvestRepo, notificationRepo)
 
-	handlers := link_handlers.GetLinkHandlers(ctx, *svc)
-	scraping := scraping.NewScraping(ctx, *svc, handlers)
+	handlers := link_handlers.GetLinkHandlers(ctx, *domain_svc, *app_svc)
+	scraping := scraping.NewScraping(ctx, *domain_svc, handlers)
 
 	var wg sync.WaitGroup
 
