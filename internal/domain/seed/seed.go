@@ -14,6 +14,6 @@ func GetSeedLinks(config config.Config) []entities.Link {
 
 func GetSeedNotifications(config config.Config) []entities.Notification {
 	return []entities.Notification{
-		{Channel: notification.NotificationChannelTwitter, Contact: "@Luis_MBL", HarvestTarget: entities.HarvestBuilding},
+		{Channel: notification.NotificationChannelWhatsApp, Contact: "5537998153343", HarvestTarget: entities.HarvestBuilding},
 	}
 }

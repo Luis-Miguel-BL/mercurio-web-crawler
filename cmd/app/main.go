@@ -29,7 +29,7 @@ func main() {
 	notificationRepo := repositories.NewNotificationMongoRepository(mongodb.DB)
 
 	app_svc := appservices.GetService(config)
-	domain_svc := domainservices.GetServices(*app_svc, linkRepo, harvestRepo, notificationRepo)
+	domain_svc := domainservices.GetServices(linkRepo, harvestRepo, notificationRepo)
 
 	handlers := link_handlers.GetLinkHandlers(ctx, *domain_svc, *app_svc)
 	scraping := scraping.NewScraping(ctx, *domain_svc, handlers)

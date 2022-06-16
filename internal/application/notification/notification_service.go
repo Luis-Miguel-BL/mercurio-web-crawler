@@ -8,7 +8,8 @@ type NotificationService struct {
 
 func NewNotificationService(config config.Config) *NotificationService {
 	return &NotificationService{NotificationHandlers: map[NotificationChannel]NotificationHandler{
-		NotificationChannelTwitter: NewTwitterNotification(config),
+		NotificationChannelTwitter:  NewTwitterNotification(config),
+		NotificationChannelWhatsApp: NewWhatsappNotification(config),
 	}}
 }
 

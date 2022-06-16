@@ -18,5 +18,5 @@ type HarvestService interface {
 }
 
 type NotificationService interface {
-	FindByTarget(context context.Context, target entities.HarvestType) (notifications []entities.Notification, err error)
+	FindByTarget(ctx context.Context, target entities.HarvestType) (notifications []entities.Notification, err error)
 }

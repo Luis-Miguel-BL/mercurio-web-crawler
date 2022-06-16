@@ -7,6 +7,7 @@ type NotificationHandler interface {
 type NotificationChannel string
 
 var NotificationChannelTwitter NotificationChannel = "twitter"
+var NotificationChannelWhatsApp NotificationChannel = "whatsapp"
 
 type Notification struct {
 	Channels    []NotificationChannel

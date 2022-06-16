@@ -98,7 +98,16 @@ func (h *ZapImoveisHandler) HandlerLink(link entities.Link) {
 		if harvestExist.UUID == "" {
 			linkHarvest := link.CreateHarvest(tmpHarvest.RawData, tmpHarvest.PageLink, tmpHarvest.Info, entities.HarvestBuilding)
 			h.domainSVC.HarvestService.Create(h.ctx, linkHarvest)
-			h.domainSVC.NotificationService.FindAndNotifyByTargets(h.ctx, linkHarvest)
+
+			notifications, err := h.domainSVC.NotificationService.FindByTarget(h.ctx, linkHarvest.HarvestType)
+			if err != nil && error.Error(err) != "mongo: no documents in result" {
+				log.Printf("Error FindByPageLink  %+v", err)
+				link.SetErrorVisit()
+			}
+			for _, notification := range notifications {
+				fmt.Println("aaaaaaa")
+				h.appSVC.Notification.Notificate(notification.BuildNotification(linkHarvest))
+			}
 
 		} else if harvestExist.RawData != tmpHarvest.RawData {
 			harvestExist.RawData = tmpHarvest.RawData

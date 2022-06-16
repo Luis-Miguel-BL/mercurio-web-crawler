@@ -2,6 +2,7 @@ package entities
 
 import (
 	"errors"
+	"fmt"
 	"mercurio-web-scraping/internal/application/notification"
 )
 
@@ -27,4 +28,18 @@ func (n *Notification) Validate() (err error) {
 
 	return nil
 
+}
+func (n *Notification) BuildNotification(harvest Harvest) notification.Notification {
+	message := fmt.Sprintf(" Novo(a) %s encontrada no site %s", translateHarvestType[harvest.HarvestType], harvest.PageLink)
+
+	return notification.Notification{
+		Channels:    []notification.NotificationChannel{n.Channel},
+		Destination: n.Contact,
+		Message:     message,
+	}
+
+}
+
+var translateHarvestType = map[HarvestType]string{
+	HarvestBuilding: "moradia",
 }
